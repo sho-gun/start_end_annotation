@@ -170,7 +170,17 @@ class Application(tkinter.Frame):
         self.top_left = (event.x, event.y)
 
     def set_bottom_right(self, event):
-        self.bottom_right = (event.x, event.y)
+        x, y = event.x, event.y
+        if x < 0:
+            x = 0
+        if x >= 1280:
+            x = 1279
+        if y < 0:
+            y = 0
+        if y >= 720:
+            y = 719
+
+        self.bottom_right = (x, y)
         self.draw_rect()
 
     def draw_rect(self):
