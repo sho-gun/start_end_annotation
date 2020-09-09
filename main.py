@@ -55,12 +55,19 @@ class Application(tkinter.Frame):
 
     def set_keyframe(self):
         # 現在のフレームをキーフレームに追加
+        x1, y1 = self.top_left
+        x2, y2 = self.bottom_right
+        x = x1 if x1 < x2 else x2
+        y = y1 if y1 < y2 else y2
+        w = x2 - x if x1 < x2 else x1 - x
+        h = y2 - y if y1 < y2 else y1 - y
+
         keyframe = [
             self.current_frame,
-            self.top_left[0],
-            self.top_left[1],
-            self.bottom_right[0] - self.top_left[0],
-            self.bottom_right[1] - self.top_left[1]
+            x,
+            y,
+            w,
+            h
         ]
 
         if keyframe[3] == 0 or keyframe[4] == 0:
