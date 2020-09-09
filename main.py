@@ -94,9 +94,10 @@ class Application(tkinter.Frame):
                             self.bottom_right = (x+w, y+h)
                             self.draw_rect()
                             break
-                return
+                return True
 
         self.current_frame = i
+        return False
 
     def init_image(self):
         # opencvで実画像ファイルをロード
@@ -122,17 +123,23 @@ class Application(tkinter.Frame):
         self.frame = tkinter.Frame(self)
         self.frame.grid(row=1, column=0, pady=10)
 
+        self.hardleft_button = tkinter.Button(self.frame, text='<<', command=self.hardprev_image)
+        self.hardleft_button.grid(row=0, column=0, padx=5)
+
         self.left_button = tkinter.Button(self.frame, text='<', command=self.prev_image)
-        self.left_button.grid(row=0, column=0, padx=5)
+        self.left_button.grid(row=0, column=1)
 
         self.right_button = tkinter.Button(self.frame, text='>', command=self.next_image)
-        self.right_button.grid(row=0, column=1)
+        self.right_button.grid(row=0, column=2, padx=5)
+
+        self.hardright_button = tkinter.Button(self.frame, text='>>', command=self.hardnext_image)
+        self.hardright_button.grid(row=0, column=3)
 
         self.save_button = tkinter.Button(self.frame, text='Save', command=self.save_box)
-        self.save_button.grid(row=0, column=4)
+        self.save_button.grid(row=0, column=5)
 
         self.clear_button = tkinter.Button(self.frame, text='Clear', command=self.clear_box)
-        self.clear_button.grid(row=0, column=2, padx=50)
+        self.clear_button.grid(row=0, column=4, padx=50)
 
         list_var = tkinter.StringVar(
             value = self.video_list
@@ -190,6 +197,12 @@ class Application(tkinter.Frame):
         self.show_image()
         self.set_keyframe()
 
+    def hardprev_image(self):
+        self.top_left = (0, 0)
+        self.bottom_right = (0, 0)
+        self.current_frame = 0
+        self.show_frame()
+
     def prev_image(self):
         # 前のフレームに移動
         self.top_left = (0, 0)
@@ -205,6 +218,14 @@ class Application(tkinter.Frame):
         self.bottom_right = (0, 0)
         self.current_frame += 1
         self.show_frame()
+
+    def hardnext_image(self):
+        # 次のフレームに移動
+        self.top_left = (0, 0)
+        self.bottom_right = (0, 0)
+
+        while self.show_frame():
+            self.current_frame += 1
 
     def save_box(self):
         # キーフレームを保存
