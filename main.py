@@ -76,7 +76,7 @@ class Application(tkinter.Frame):
 
         if keyframe[0] <= start_frame:
             self.keyframes['start'] = keyframe
-        elif keyframe[0] >= end_frame:
+        if keyframe[0] >= end_frame:
             self.keyframes['end'] = keyframe
 
     def show_frame(self):
