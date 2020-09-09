@@ -215,7 +215,8 @@ class Application(tkinter.Frame):
 
     def set_video(self, event):
         # 別の動画に移動
-        self.save_box()
+        # self.save_box()
+        self.clear_box()
         for i in self.list_box.curselection():
             self.current_video = self.list_box.get(i)
             self.current_frame = 0
