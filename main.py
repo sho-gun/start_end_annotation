@@ -162,8 +162,8 @@ class Application(tkinter.Frame):
         # マウスカーソル位置に補助線を引く
         x, y = event.x, event.y
         self.draw_rect()
-        cv2.line(self.rgb_img, (x, 0), (x, 720), (255, 255, 255), 1)
-        cv2.line(self.rgb_img, (0, y), (1280, y), (255, 255, 255), 1)
+        cv2.line(self.rgb_img, (x, 0), (x, 720), (255, 140, 0), 1)
+        cv2.line(self.rgb_img, (0, y), (1280, y), (255, 140, 0), 1)
         self.show_image()
 
     def set_top_left(self, event):
