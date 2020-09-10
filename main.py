@@ -21,12 +21,16 @@ class Application(tkinter.Frame):
         self.top_left = (0, 0)
         self.bottom_right = (0, 0)
 
+        self.start_frame = tkinter.StringVar(value='None')
+        self.end_frame = tkinter.StringVar(value='None')
+
         self.video_list = []
         for class_dir in sorted(os.listdir(root_dir)):
             self.video_list.extend([os.path.join(root_dir, class_dir, video_dir) for video_dir in sorted(os.listdir(os.path.join(root_dir, class_dir)))])
 
         self.current_video = self.video_list[0]
         self.current_frame = 0
+        self.current_frame_str = tkinter.StringVar(value='Current_Frame: {}'.format(self.current_frame))
 
         self.init_keyframes()
         self.init_image()
@@ -52,6 +56,8 @@ class Application(tkinter.Frame):
                             'start': [int(v) for v in lines[0].strip().split(' ')],
                             'end': [int(v) for v in lines[1].strip().split(' ')]
                         }
+
+        self.update_labels()
 
     def set_keyframe(self):
         # 現在のフレームをキーフレームに追加
@@ -86,6 +92,23 @@ class Application(tkinter.Frame):
         if keyframe[0] >= end_frame:
             self.keyframes['end'] = keyframe
 
+        self.update_labels()
+
+    def update_labels(self):
+        if len(self.keyframes['start']) > 0:
+            start_frame = self.keyframes['start'][0]
+            self.start_frame.set(start_frame)
+        else:
+            self.start_frame.set('None')
+
+        if len(self.keyframes['end']) > 0:
+            end_frame = self.keyframes['end'][0]
+            self.end_frame.set(end_frame)
+        else:
+            self.end_frame.set('None')
+
+        self.current_frame_str.set('Current_Frame: {}'.format(self.current_frame))
+
     def show_frame(self):
         # current_frameに対応する画像を表示
         for i, img_path in enumerate(sorted(os.listdir(os.path.join(self.current_video, 'frames')))):
@@ -101,9 +124,13 @@ class Application(tkinter.Frame):
                             self.bottom_right = (x+w, y+h)
                             self.draw_rect()
                             break
+
+                self.update_labels()
                 return True
 
         self.current_frame = i
+        self.update_labels()
+
         return False
 
     def init_image(self):
@@ -128,7 +155,7 @@ class Application(tkinter.Frame):
         self.show_image()
 
         self.frame = tkinter.Frame(self)
-        self.frame.grid(row=1, column=0, pady=10)
+        self.frame.grid(row=2, column=0, pady=10)
 
         self.hardleft_button = tkinter.Button(self.frame, text='<<', command=self.hardprev_image)
         self.hardleft_button.grid(row=0, column=0, padx=5)
@@ -147,6 +174,18 @@ class Application(tkinter.Frame):
 
         self.clear_button = tkinter.Button(self.frame, text='Clear', command=self.clear_box)
         self.clear_button.grid(row=0, column=4, padx=50)
+
+        self.current_label = tkinter.Label(self.frame, textvariable=self.current_frame_str)
+        self.current_label.grid(row=0, column=6, padx=50)
+
+        self.start_label = tkinter.Label(self.frame, textvariable=self.start_frame)
+        self.start_label.grid(row=0, column=7, padx=30)
+
+        self.to_label = tkinter.Label(self.frame, textvariable=tkinter.StringVar(value='->'))
+        self.to_label.grid(row=0, column=8)
+
+        self.end_label = tkinter.Label(self.frame, textvariable=self.end_frame)
+        self.end_label.grid(row=0, column=9, padx=30)
 
         list_var = tkinter.StringVar(
             value = self.video_list
