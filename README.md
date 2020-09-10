@@ -1,6 +1,6 @@
 # start_end_annotation
 
-##Usage
+## Usage
 ```
 # Linux
 python3 main.py -i YOUR_INPUT_DIRECTORY
